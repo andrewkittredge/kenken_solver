@@ -7,8 +7,9 @@ class Cage(object):
 		self.target = target
 
 class Cages(dict):
+	#might be dangerous to depend on values being equal
 	def cage_squares(self, cage):
-		return [square for square, other_cage in self.items() if other_cage == cage]
+		return [item_square for item_square, item_cage in self.items() if item_cage == cage]
 		
 
 def test_square_lookup():

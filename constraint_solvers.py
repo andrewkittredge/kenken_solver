@@ -9,9 +9,9 @@ def satisfies_cage_constraint(values, cages):
     '''
 
     square = len(values)
-    cage = cages[square]
     square_value = values[square - 1]
 
+    cage = cages[square]
     cage_operator = cage.operator
     target = cage.target
 

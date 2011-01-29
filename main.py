@@ -1,5 +1,4 @@
-#! /usr/bin/python2.6
-
+#! /Library/Frameworks/Python.framework/Versions/2.6/bin/python
 DEBUG = True
 
 from constraint_solvers import remaining_square_values, satisfies_cage_constraint
@@ -17,16 +16,49 @@ def satisfying_values(previous_values, cages, dimension):
 		for possible_value in remaining_square_values(
 							previous_values,
 							dimension):
-			new_list = previous_values + [possible_value]
-			if satisfies_cage_constraint(new_list, cages):
-				for satisfying_value in satisfying_values(
-							new_list, 
-							cages, 
-							dimension):
-					yield [possible_value] + satisfying_value
+			working_list = previous_values + [possible_value]
+			if satisfies_cage_constraint(working_list, cages):
+				for subsequent_values in satisfying_values(
+			                        				working_list, 
+							                        cages, 
+							                        dimension):
+					yield [possible_value] + subsequent_values
 
 def test_satisfying_values():
 	return satisfying_values([], 3)
+
+
+def test_four_by_four():
+    solution_from_web = [3,1,2,4,2,3,4,1,4,2,1,3,1,4,3,2]
+    cage_1 = Cage(mul, 18)
+    cage_2 = Cage(div, 2)
+    cage_3 = Cage(sub, 3)
+    cage_4 = Cage(sub, 3)
+    cage_5 = Cage(add, 7)
+    cage_6 = Cage(sub, 1)
+    cage_7 = Cage(sub, 1)
+
+    cages = Cages({1: cage_1,
+                   2: cage_2,
+                   3: cage_2,
+                   4: cage_3,
+                   5: cage_1,
+                   6: cage_1,
+                   7: cage_4,
+                   8: cage_3,
+                   9: cage_5,
+                   10: cage_5,
+                   11: cage_4,
+                   12: cage_6,
+                   13: cage_5,
+                   14: cage_7,
+                   15: cage_7,
+                   16: cage_6})
+
+    import pdb
+    pdb.set_trace()
+    solutions = satisfying_values([], cages, 4)
+    assert solution_from_web in solutions
 
 def four_by_four():
 	cage_1 = Cage(add, 7)
@@ -58,37 +90,6 @@ def four_by_four():
 	solutions = satisfying_values([], cages, 4)
 	print solutions.next()
 
-def test_four_by_four():
-    solution_from_web = [3,1,2,4,2,3,4,1,4,2,1,3,1,4,3,2]
-    cage_1 = Cage(mul, 18)
-    cage_2 = Cage(div, 2)
-    cage_3 = Cage(sub, 3)
-    cage_4 = Cage(sub, 3)
-    cage_5 = Cage(add, 7)
-    cage_6 = Cage(sub, 4)
-    cage_7 = Cage(sub, 1)
-
-    cages = Cages({1: cage_1,
-                   2: cage_2,
-                   3: cage_2,
-                   4: cage_3,
-                   5: cage_1,
-                   6: cage_1,
-                   7: cage_4,
-                   8: cage_3,
-                   9: cage_5,
-                   10: cage_5,
-                   11: cage_4,
-                   12: cage_6,
-                   13: cage_5,
-                   14: cage_7,
-                   15: cage_7,
-                   16: cage_6})
-
-    import pdb
-    pdb.set_trace()
-    solutions = satisfying_values([], cages, 4)
-    assert solution_from_web in solutions
 
 
 def test_with_cage():
@@ -112,3 +113,6 @@ def test_with_cage():
 	cages[2] = Cage(None, 1)
 	cages[3] = Cage(None, 1)
 	assert satisfying_values([], cages, 2).next() == [2, 1, 1, 2]
+
+if "__name__" == "__main__":
+    test_four_by_four()
